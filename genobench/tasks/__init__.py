@@ -15,3 +15,5 @@ def get_task(name: str, **kwargs) -> Any:
     return TASK_REGISTRY[name](**kwargs)
 
 from . import dummy
+from . import human_vs_worm
+from . import human_enhancers_cohn
