@@ -51,6 +51,8 @@ def main():
         # Pass the dynamic kwargs into the evaluator
         run_evaluation(args.model, args.task, **kwargs)
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(f"[Error] Pipeline failed: {e}", file=sys.stderr)
         sys.exit(1)
 

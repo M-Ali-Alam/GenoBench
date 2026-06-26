@@ -16,5 +16,9 @@ def get_model(name: str, **kwargs) -> Any:
         raise ValueError(f"Model '{name}' not found. Available models: {list(MODEL_REGISTRY.keys())}")
     return MODEL_REGISTRY[name](**kwargs)
 
+from .base import BaseGFM
+
 # Import modules here so the Python interpreter executes the decorators
 from . import dummy
+from . import hyenadna 
+from . import dnabert2

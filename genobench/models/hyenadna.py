@@ -1,44 +1,35 @@
-import sys
 import torch
 import numpy as np
 from typing import List, Optional
-from transformers import AutoModel, AutoTokenizer, AutoConfig
+from transformers import AutoModel, AutoTokenizer
 from . import register_model
 from .base import BaseGFM
 
-@register_model("dnabert2")
-class DNABERT2Wrapper(BaseGFM):
+@register_model("hyenadna")
+class HyenaDNAWrapper(BaseGFM):
     def __init__(self, **kwargs):
-        self.checkpoint = kwargs.get("checkpoint", "zhihan1996/DNABERT-2-117M")
+        # 1. Extract configurations with safe fallbacks
+        self.checkpoint = kwargs.get("checkpoint", "LongSafari/hyenadna-tiny-1k-seqlen-hf")
         self.device = kwargs.get("device", "cuda" if torch.cuda.is_available() else "cpu")
         self.max_length = kwargs.get("max_length", 1024)
         
-        print(f"[Model] Initializing DNABERT-2 on {self.device.upper()}...")
+        print(f"[Model] Initializing HyenaDNA on {self.device.upper()}...")
         print(f"        -> Checkpoint: {self.checkpoint}")
 
+        # 2. Load Tokenizer and Base Model
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.checkpoint, 
             trust_remote_code=True
         )
         
-        # Load and patch the config to prevent HF version 5 compatibility issues
-        config = AutoConfig.from_pretrained(self.checkpoint, trust_remote_code=True)
-        if not hasattr(config, "pad_token_id") or config.pad_token_id is None:
-            config.pad_token_id = self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else 0
-
+        # Load base model for representation extraction, optionally in float16 for VRAM savings
         self.model = AutoModel.from_pretrained(
             self.checkpoint, 
-            config=config,
-            trust_remote_code=True
+            trust_remote_code=True,
+            torch_dtype=torch.float16 if "cuda" in self.device else torch.float32
         ).to(self.device)
+        
         self.model.eval()
-
-        # Monkey-patch any imported bert_layers module to disable Flash Attention/Triton
-        # and force standard PyTorch attention (due to Triton tl.dot trans_b compatibility bug)
-        for name, module in list(sys.modules.items()):
-            if name.endswith("bert_layers"):
-                print(f"[DNABERT-2 Patch] Disabling Triton flash attention in: {name}")
-                module.flash_attn_qkvpacked_func = None
 
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token if self.tokenizer.eos_token else "[PAD]"
@@ -67,8 +58,13 @@ class DNABERT2Wrapper(BaseGFM):
                 with torch.no_grad():
                     outputs = self.model(**inputs)
             
-            hidden_states = outputs[0]
-            pooled = hidden_states.mean(dim=1)
-            embeddings.append(pooled.cpu().numpy())
+            if hasattr(outputs, "last_hidden_state"):
+                hidden = outputs.last_hidden_state
+            else:
+                hidden = outputs[0]
+                
+            pooled = hidden.mean(dim=1)
+            # Ensure float32 representation for scikit-learn probing compatibility
+            embeddings.append(pooled.cpu().to(torch.float32).numpy())
 
         return np.concatenate(embeddings, axis=0)
