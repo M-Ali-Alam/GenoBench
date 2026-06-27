@@ -10,6 +10,20 @@ class HyenaDNAWrapper(BaseGFM):
     def __init__(self, **kwargs):
         # 1. Extract configurations with safe fallbacks
         self.checkpoint = kwargs.get("checkpoint", "LongSafari/hyenadna-tiny-1k-seqlen-hf")
+        
+        # Security check: Whitelist allowed checkpoints to prevent RCE via untrusted remote code
+        allowed_checkpoints = {
+            "LongSafari/hyenadna-tiny-1k-seqlen-hf",
+            "LongSafari/hyenadna-small-32k-seqlen-hf",
+            "LongSafari/hyenadna-medium-160k-seqlen-hf",
+            "LongSafari/hyenadna-large-1m-seqlen-hf",
+        }
+        if self.checkpoint not in allowed_checkpoints:
+            raise ValueError(
+                f"Untrusted checkpoint '{self.checkpoint}'. "
+                f"Allowed checkpoints for HyenaDNA: {allowed_checkpoints}"
+            )
+            
         self.device = kwargs.get("device", "cuda" if torch.cuda.is_available() else "cpu")
         self.max_length = kwargs.get("max_length", 1024)
         

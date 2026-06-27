@@ -67,6 +67,21 @@ def run_evaluation(model_name: str, task_name: str, **kwargs) -> None:
     print(f"           -> Total test samples: {len(test_texts)}")
 
     # 4. Instantiate Model
+    if "model_kwargs" in kwargs:
+        mk = kwargs["model_kwargs"]
+        if isinstance(mk, str):
+            try:
+                import json
+                mk = json.loads(mk)
+            except Exception:
+                pass
+        if isinstance(mk, dict) and "checkpoint" in mk:
+            import warnings
+            warnings.warn(
+                "Ignoring 'checkpoint' key in model_kwargs. Please use the --checkpoint argument directly.",
+                UserWarning
+            )
+
     kwargs["max_length"] = max_length
     model = get_model(model_name, **kwargs)
 

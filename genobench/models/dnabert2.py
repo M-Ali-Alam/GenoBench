@@ -10,6 +10,17 @@ from .base import BaseGFM
 class DNABERT2Wrapper(BaseGFM):
     def __init__(self, **kwargs):
         self.checkpoint = kwargs.get("checkpoint", "zhihan1996/DNABERT-2-117M")
+        
+        # Security check: Whitelist allowed checkpoints to prevent RCE via untrusted remote code
+        allowed_checkpoints = {
+            "zhihan1996/DNABERT-2-117M"
+        }
+        if self.checkpoint not in allowed_checkpoints:
+            raise ValueError(
+                f"Untrusted checkpoint '{self.checkpoint}'. "
+                f"Allowed checkpoints for DNABERT-2: {allowed_checkpoints}"
+            )
+            
         self.device = kwargs.get("device", "cuda" if torch.cuda.is_available() else "cpu")
         self.max_length = kwargs.get("max_length", 1024)
         
