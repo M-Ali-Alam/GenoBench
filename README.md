@@ -94,24 +94,33 @@ Results are logged as structured JSON lines appended to `results/evaluation_runs
 
 ---
 
+## Project Documentation
+
+Detailed reference manuals are available in the [docs/](docs) directory:
+*   [Architecture Overview](docs/architecture.md): Deep-dive into registries, factory patterns, and the orchestrator flow.
+*   [Hardware Profiling Methodology](docs/hardware_profiling.md): Technical details of CUDA Event timing and peak memory metrics.
+*   [Extensibility Guide](docs/extensibility_guide.md): Step-by-step instructions for adding custom models and biological tasks.
+
+---
+
 ## Directory Structure
 
 *   `genobench/`
-    *   [cli.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/genobench/cli.py): CLI interface entry point.
-    *   [evaluator.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/genobench/evaluator.py): Evaluator orchestrator that runs the linear probing and hardware profiling pipeline.
+    *   [cli.py](genobench/cli.py): CLI interface entry point.
+    *   [evaluator.py](genobench/evaluator.py): Evaluator orchestrator that runs the linear probing and hardware profiling pipeline.
     *   `models/`:
-        *   [base.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/genobench/models/base.py): Base class `BaseGFM` interface.
-        *   [hyenadna.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/genobench/models/hyenadna.py): Wrapper for HyenaDNA representations.
-        *   [dnabert2.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/genobench/models/dnabert2.py): Wrapper for DNABERT-2 representations with eager fallback patch.
+        *   [base.py](genobench/models/base.py): Base class `BaseGFM` interface.
+        *   [hyenadna.py](genobench/models/hyenadna.py): Wrapper for HyenaDNA representations.
+        *   [dnabert2.py](genobench/models/dnabert2.py): Wrapper for DNABERT-2 representations with eager fallback patch.
     *   `tasks/`:
-        *   [human_vs_worm.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/genobench/tasks/human_vs_worm.py): Task loader wrapper for the demo dataset `demo_human_or_worm`.
-        *   [human_enhancers_cohn.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/genobench/tasks/human_enhancers_cohn.py): Task loader wrapper for enhancers identification.
+        *   [human_vs_worm.py](genobench/tasks/human_vs_worm.py): Task loader wrapper for the demo dataset `demo_human_or_worm`.
+        *   [human_enhancers_cohn.py](genobench/tasks/human_enhancers_cohn.py): Task loader wrapper for enhancers identification.
     *   `hardware/`:
-        *   [probe.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/genobench/hardware/probe.py): Context-driven latency and memory profiling hooks.
+        *   [probe.py](genobench/hardware/probe.py): Context-driven latency and memory profiling hooks.
     *   `metrics/`:
-        *   [classification.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/genobench/metrics/classification.py): biological metric tracker (MCC & AUPRC).
+        *   [classification.py](genobench/metrics/classification.py): biological metric tracker (MCC & AUPRC).
 *   `tests/`
-    *   [test_metrics.py](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/tests/test_metrics.py): Unit test suite.
+    *   [test_metrics.py](tests/test_metrics.py): Unit test suite.
 
 ---
 
@@ -127,4 +136,4 @@ python3 -m unittest discover -s tests -p "test_*.py"
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](file:///home/m-ali-alam/CG/GenoBench-repo/GenoBench/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
