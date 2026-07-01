@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "genobench"
+version = "1.0.0"
+description = "A joint biological and hardware benchmarking framework for Genomic Foundation Models (GFMs)"
+readme = "README.md"
+authors = [
+    { name = "Muhammad Ali Alam", email = "alialam140847@gmail.com" }
+]
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "torch>=2.0.0",
+    "transformers>=4.40.0,<5.0.0",
+    "datasets",
+    "scikit-learn",
+    "genomic-benchmarks",
+    "numpy",
+]
+
+[project.urls]
+Homepage = "https://github.com/M-Ali-Alam/GenoBench"
+
+[project.scripts]
+genobench = "genobench.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["genobench*"]
+exclude = ["tests*", "results*", "docs*"]
