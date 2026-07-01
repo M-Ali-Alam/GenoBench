@@ -22,9 +22,11 @@ Unlike existing GFM benchmarks that focus solely on biological capabilities or p
 Ensure you have a Python 3.10+ environment with PyTorch (CUDA supported) installed. Clone the repository and install the dependencies:
 
 ```bash
-git clone https://github.com/<your-username>/GenoBench.git
+git clone https://github.com/M-Ali-Alam/GenoBench.git
 cd GenoBench
 pip install -r requirements.txt
+# Or install in editable development mode:
+pip install -e .
 ```
 
 ---
@@ -33,7 +35,13 @@ pip install -r requirements.txt
 
 ### 1. Run Evaluation via the CLI
 
-You can evaluate any registered GFM on a benchmark task using the command-line interface:
+You can evaluate any registered GFM on a benchmark task using the installed `genobench` command directly:
+
+```bash
+genobench --model hyenadna --task human_vs_worm --batch_size 16 --max_length 1024
+```
+
+Or execute it as a python module from the repository root:
 
 ```bash
 python3 -m genobench.cli --model hyenadna --task human_vs_worm --batch_size 16 --max_length 1024
@@ -42,7 +50,7 @@ python3 -m genobench.cli --model hyenadna --task human_vs_worm --batch_size 16 -
 To run the patched DNABERT-2 implementation (which falls back to PyTorch eager attention to avoid Triton compiler compatibility warnings):
 
 ```bash
-python3 -m genobench.cli --model dnabert2 --task human_vs_worm --batch_size 16 --max_length 1024
+genobench --model dnabert2 --task human_vs_worm --batch_size 16 --max_length 1024
 ```
 
 ### 2. Supported CLI Parameters
