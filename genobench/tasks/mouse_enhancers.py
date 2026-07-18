@@ -1,5 +1,4 @@
 from typing import List, Tuple
-import numpy as np
 from genomic_benchmarks.dataset_getters.pytorch_datasets import GenomicClfDataset
 from . import register_task
 
@@ -15,10 +14,7 @@ class MouseEnhancersTask:
         
         sequences = [self.train_dataset[i][0] for i in range(len(self.train_dataset))]
         labels = [self.train_dataset[i][1] for i in range(len(self.train_dataset))]
-        
-        rng = np.random.default_rng(42)
-        indices = rng.permutation(len(sequences))
-        return [sequences[i] for i in indices], [labels[i] for i in indices]
+        return sequences, labels
 
     def get_test_data(self) -> Tuple[List[str], List[int]]:
         if self.test_dataset is None:
@@ -26,7 +22,4 @@ class MouseEnhancersTask:
         
         sequences = [self.test_dataset[i][0] for i in range(len(self.test_dataset))]
         labels = [self.test_dataset[i][1] for i in range(len(self.test_dataset))]
-        
-        rng = np.random.default_rng(42)
-        indices = rng.permutation(len(sequences))
-        return [sequences[i] for i in indices], [labels[i] for i in indices]
+        return sequences, labels
