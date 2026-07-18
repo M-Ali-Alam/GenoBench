@@ -17,3 +17,9 @@ def get_task(name: str, **kwargs) -> Any:
 from . import dummy
 from . import human_vs_worm
 from . import human_enhancers_cohn
+from . import coding_vs_intergenic
+from . import human_nontarget_promoters
+from . import human_ocr
+from . import drosophila_enhancers
+from . import mouse_enhancers
+from . import human_enhancers_ensembl
