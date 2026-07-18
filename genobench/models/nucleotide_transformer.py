@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from typing import List, Optional
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoModelForMaskedLM, AutoTokenizer
 from . import register_model
 from .base import BaseGFM
 
@@ -24,10 +24,11 @@ class NucleotideTransformerGFM(BaseGFM):
             trust_remote_code=True
         )
         
-        self.model = AutoModel.from_pretrained(
+        # Use AutoModelForMaskedLM in float32 for ESM architecture compatibility
+        self.model = AutoModelForMaskedLM.from_pretrained(
             self.checkpoint, 
             trust_remote_code=True,
-            torch_dtype=torch.float16 if "cuda" in self.device else torch.float32
+            torch_dtype=torch.float32
         ).to(self.device)
         
         self.model.eval()
@@ -54,12 +55,14 @@ class NucleotideTransformerGFM(BaseGFM):
             if probe is not None:
                 with probe.measure_batch():
                     with torch.no_grad():
-                        outputs = self.model(**inputs)
+                        outputs = self.model(**inputs, output_hidden_states=True)
             else:
                 with torch.no_grad():
-                    outputs = self.model(**inputs)
+                    outputs = self.model(**inputs, output_hidden_states=True)
             
-            if hasattr(outputs, "last_hidden_state"):
+            if hasattr(outputs, "hidden_states") and outputs.hidden_states:
+                hidden = outputs.hidden_states[-1]
+            elif hasattr(outputs, "last_hidden_state"):
                 hidden = outputs.last_hidden_state
             else:
                 hidden = outputs[0]
