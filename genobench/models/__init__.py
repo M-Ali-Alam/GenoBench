@@ -22,3 +22,5 @@ from .base import BaseGFM
 from . import dummy
 from . import hyenadna 
 from . import dnabert2
+from . import kmer_lr
+from . import nucleotide_transformer
