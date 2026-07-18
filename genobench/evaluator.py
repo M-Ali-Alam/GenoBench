@@ -71,7 +71,6 @@ def run_evaluation(model_name: str, task_name: str, **kwargs) -> None:
         mk = kwargs["model_kwargs"]
         if isinstance(mk, str):
             try:
-                import json
                 mk = json.loads(mk)
             except Exception:
                 pass
