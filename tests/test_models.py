@@ -11,6 +11,7 @@ class TestModelRegistry(unittest.TestCase):
             "dnabert2",
             "kmer_lr",
             "nucleotide_transformer",
+            "onehot_cnn",
         ]
         for model_name in expected_models:
             self.assertIn(model_name, MODEL_REGISTRY, f"Model '{model_name}' should be registered in MODEL_REGISTRY")
@@ -23,6 +24,15 @@ class TestModelRegistry(unittest.TestCase):
         self.setIsInstance = True
         self.assertTrue(isinstance(embeddings, np.ndarray))
         self.assertEqual(embeddings.shape, (2, 64))
+
+    def test_onehot_cnn_embeddings_shape_and_determinism(self):
+        seqs = ["ATGCGTACGTAGCTA", "CCGGAATTCCGGAAANNNN", "A"]
+        a = get_model("onehot_cnn", device="cpu", num_filters=32).get_embeddings(seqs, batch_size=2)
+        b = get_model("onehot_cnn", device="cpu", num_filters=32).get_embeddings(seqs, batch_size=3)
+        self.assertEqual(a.shape, (3, 64))
+        self.assertTrue(np.isfinite(a).all())
+        # Same seed -> same features, independent of batch size / padding
+        np.testing.assert_allclose(a, b, atol=1e-5)
 
 if __name__ == "__main__":
     unittest.main()
