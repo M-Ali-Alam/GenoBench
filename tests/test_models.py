@@ -12,6 +12,7 @@ class TestModelRegistry(unittest.TestCase):
             "kmer_lr",
             "nucleotide_transformer",
             "onehot_cnn",
+            "gena_lm",
         ]
         for model_name in expected_models:
             self.assertIn(model_name, MODEL_REGISTRY, f"Model '{model_name}' should be registered in MODEL_REGISTRY")
@@ -33,6 +34,10 @@ class TestModelRegistry(unittest.TestCase):
         self.assertTrue(np.isfinite(a).all())
         # Same seed -> same features, independent of batch size / padding
         np.testing.assert_allclose(a, b, atol=1e-5)
+
+    def test_gena_lm_rejects_untrusted_checkpoint(self):
+        with self.assertRaises(ValueError):
+            get_model("gena_lm", checkpoint="someone/else-model")
 
 if __name__ == "__main__":
     unittest.main()

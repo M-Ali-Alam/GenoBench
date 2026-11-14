@@ -25,3 +25,4 @@ from . import dnabert2
 from . import kmer_lr
 from . import nucleotide_transformer
 from . import onehot_cnn
+from . import gena_lm
