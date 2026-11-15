@@ -5,6 +5,7 @@ import torch
 import numpy as np
 from datetime import datetime, timezone
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 
 from genobench.models import get_model
 from genobench.tasks import get_task
@@ -98,7 +99,12 @@ def run_evaluation(model_name: str, task_name: str, **kwargs) -> None:
     with HardwareProbe() as probe:
         test_embeddings = model.get_embeddings(test_texts, batch_size=batch_size, probe=probe)
 
-    # 8. Train the linear probe classifier
+    # 8. Standardize features (fit on train only), then train the linear probe classifier.
+    # Embedding scales differ wildly across models (e.g. Gena-LM activations reach ~1e4),
+    # which stops lbfgs from converging; standardizing gives all models one protocol.
+    scaler = StandardScaler().fit(train_embeddings)
+    train_embeddings = scaler.transform(train_embeddings)
+    test_embeddings = scaler.transform(test_embeddings)
     print(f"[Pipeline] Training linear probe (LogisticRegression)...")
     clf = LogisticRegression(
         class_weight="balanced",
@@ -128,6 +134,7 @@ def run_evaluation(model_name: str, task_name: str, **kwargs) -> None:
         "model": model_name,
         "task": task_name,
         "evaluation_protocol": "linear_probing",
+        "feature_standardization": True,
         "hyperparameters": {
             "max_sequence_length": max_length,
             "batch_size": batch_size,
