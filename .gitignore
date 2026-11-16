@@ -47,5 +47,7 @@ ENV/
 
 # GenoBench Results & Data Caches
 results/
+# Generated reports (kept private; force-add individual files on purpose)
+reports/
 data/
 .ipynb_checkpoints/

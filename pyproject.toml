@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "genobench"
-version = "1.0.0"
+version = "1.1.0"
 description = "A joint biological and hardware benchmarking framework for Genomic Foundation Models (GFMs)"
 readme = "README.md"
 authors = [
