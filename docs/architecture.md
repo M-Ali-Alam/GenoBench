@@ -50,5 +50,5 @@ The [evaluator.py](../genobench/evaluator.py) orchestrator coordinates the end-t
 3.  **Warmup**: Runs a single batch forward pass to compile Triton custom layers and load GPU/tokenizer caches.
 4.  **Embedding Extraction**: Extracts representations for training.
 5.  **Hardware Profiling**: Wraps test embedding extraction in the `HardwareProbe` context manager to capture peak memory and latency.
-6.  **Linear Probing**: Trains a scikit-learn `LogisticRegression(class_weight="balanced")` probe on the frozen training representations.
+6.  **Linear Probing**: Standardizes the embeddings with a `StandardScaler` fit on the training split only, then trains a scikit-learn `LogisticRegression(class_weight="balanced")` probe on the frozen training representations. Standardization keeps models with very different activation scales (e.g. Gena-LM, whose last-layer activations reach ~1e4) on the same protocol and lets the solver converge.
 7.  **Evaluation & Serialization**: Generates predictions on the test split, computes MCC and AUPRC, collects environment configurations, and saves the output.
