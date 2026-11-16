@@ -2,7 +2,8 @@ from typing import List, Tuple
 from genomic_benchmarks.dataset_getters.pytorch_datasets import GenomicClfDataset
 from . import register_task
 
-@register_task("dummy_mouse_enhancers_ensembl")
+@register_task("mouse_enhancers_ensembl")
+@register_task("dummy_mouse_enhancers_ensembl")  # deprecated alias, kept for backward compatibility
 class MouseEnhancersTask:
     def __init__(self, **kwargs):
         self.train_dataset = None

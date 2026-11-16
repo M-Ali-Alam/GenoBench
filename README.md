@@ -81,10 +81,10 @@ All tasks are binary classification, loaded from the [Genomic Benchmarks](https:
 | `human_nontarget_promoters` | `human_nontata_promoters` | 9,034 |
 | `human_ocr_ensembl` | `human_ocr_ensembl` | 34,952 |
 | `drosophila_enhancers_stark` | `drosophila_enhancers_stark` | 1,730 |
-| `dummy_mouse_enhancers_ensembl` | `dummy_mouse_enhancers_ensembl` | 242 |
+| `mouse_enhancers_ensembl` | `dummy_mouse_enhancers_ensembl` | 242 |
 | `dummy_task` | (built-in stub) | test stub only |
 
-The `dummy_` prefix on the mouse enhancer task comes from the upstream Genomic Benchmarks dataset name. It is a real task with a very small test split (242 samples), so its metrics are noisy.
+The mouse enhancer task is a real task; the upstream Genomic Benchmarks dataset is named `dummy_mouse_enhancers_ensembl`, and that name is still accepted as a deprecated alias for the task. Its test split is very small (242 samples), so its metrics are noisy.
 
 ### 2. Supported CLI Parameters
 

@@ -32,8 +32,8 @@ Legend: `[x]` done, `[ ]` planned, `[~]` in progress / blocked.
 - [x] Evaluation of all models on all tasks under one protocol
 - [x] README and `docs/` updated
 - [x] Tests cover new models and tasks
-- [ ] Rename the `dummy_mouse_enhancers_ensembl` task
-- [ ] Bump version to 1.1.0
+- [x] Rename the `dummy_mouse_enhancers_ensembl` task (old name kept as a deprecated alias)
+- [x] Bump version to 1.1.0
 - [ ] Tag `v1.1.0` and publish release notes
 
 ## v1.0 (released)

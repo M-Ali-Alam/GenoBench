@@ -11,7 +11,8 @@ class TestTaskRegistry(unittest.TestCase):
             "human_nontarget_promoters",
             "human_ocr_ensembl",
             "drosophila_enhancers_stark",
-            "dummy_mouse_enhancers_ensembl",
+            "mouse_enhancers_ensembl",
+            "dummy_mouse_enhancers_ensembl",  # deprecated alias
             "human_enhancers_ensembl",
         ]
         for task_name in expected_tasks:
@@ -24,6 +25,9 @@ class TestTaskRegistry(unittest.TestCase):
                 continue  # legacy single-split stub (get_data)
             self.assertTrue(callable(getattr(cls, "get_train_data", None)), f"{name} lacks get_train_data")
             self.assertTrue(callable(getattr(cls, "get_test_data", None)), f"{name} lacks get_test_data")
+
+    def test_mouse_enhancer_alias_resolves_to_same_task(self):
+        self.assertIs(TASK_REGISTRY["mouse_enhancers_ensembl"], TASK_REGISTRY["dummy_mouse_enhancers_ensembl"])
 
     def test_invalid_task_raises_error(self):
         with self.assertRaises(ValueError) as context:
